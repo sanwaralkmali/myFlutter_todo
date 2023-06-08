@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: "Today's To"),
+      home: const MyHomePage(
+        title: "Today's To",
+      ),
     );
   }
 }

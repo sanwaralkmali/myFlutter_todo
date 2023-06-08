@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import '../exportScreens.dart';
+import '../db/database_helper.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({
+    super.key,
+    required this.title,
+  });
 
   final String title;
 
@@ -11,6 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  DatabaseHelper db = DatabaseHelper();
   int _index = 0;
   final List<Widget> _screens = const <Widget>[
     HomeScreen(),

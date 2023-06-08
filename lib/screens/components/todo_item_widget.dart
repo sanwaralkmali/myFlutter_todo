@@ -27,7 +27,7 @@ class _TodoItemState extends State<TodoItem> {
                 children: [
                   Column(
                     children: [
-                      widget.item.getCategoryIcon(32),
+                      widget.item.getTaskCategoryIcon(32),
                       spaceH(3),
                       Text(
                         widget.item.category.name,

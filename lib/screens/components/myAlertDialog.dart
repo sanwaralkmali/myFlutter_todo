@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_todos/screens/components/space.dart';
+import '../../data/todo_item.dart';
+import '../../db/database_helper.dart';
 
 class TaskAlertDialog extends StatefulWidget {
+  TaskAlertDialog({Key? key, required this.databaseHelper}) : super(key: key);
+  DatabaseHelper databaseHelper = DatabaseHelper();
   @override
   _TaskAlertDialogState createState() => _TaskAlertDialogState();
 }
@@ -8,27 +13,96 @@ class TaskAlertDialog extends StatefulWidget {
 class _TaskAlertDialogState extends State<TaskAlertDialog> {
   String title = '';
   String description = '';
-  String repeatValue = 'Never';
-  String taskTypeValue = 'Work';
-  String priorityValue = 'Low';
-  String endingDate = 'Today';
+  Repeat repeatValue = Repeat.never;
+  TaskCategory taskTypeValue = TaskCategory.others;
+  Priority priorityValue = Priority.low;
+  DateTime? endingDate;
+  bool showWarning = false;
 
   void changeRepeatValue(String value) {
     setState(() {
-      repeatValue = value;
+      switch (value) {
+        case 'never':
+          repeatValue = Repeat.never;
+          break;
+        case 'daily':
+          repeatValue = Repeat.daily;
+          break;
+        case 'weekly':
+          repeatValue = Repeat.weekly;
+          break;
+        case 'monthly':
+          repeatValue = Repeat.monthly;
+          break;
+        case 'yearly':
+          repeatValue = Repeat.yearly;
+          break;
+        default:
+          repeatValue = Repeat.never;
+      }
     });
   }
 
   void changeTaskTypeValue(String value) {
     setState(() {
-      taskTypeValue = value;
+      switch (value) {
+        case 'work':
+          taskTypeValue = TaskCategory.work;
+          break;
+        case 'personal':
+          taskTypeValue = TaskCategory.personal;
+          break;
+        case 'shopping':
+          taskTypeValue = TaskCategory.shopping;
+          break;
+        default:
+          taskTypeValue = TaskCategory.others;
+      }
     });
   }
 
   void changePriorityValue(String value) {
     setState(() {
-      priorityValue = value;
+      switch (value) {
+        case 'low':
+          priorityValue = Priority.low;
+          break;
+        case 'medium':
+          priorityValue = Priority.medium;
+          break;
+        case 'high':
+          priorityValue = Priority.high;
+          break;
+        default:
+          priorityValue = Priority.low;
+      }
     });
+  }
+
+  addNewTask() {
+    if (title.isNotEmpty) {
+      if (description.isEmpty) description = 'No description provided';
+
+      ToDoItem task = ToDoItem(
+          title: title,
+          description: description,
+          startDate: DateTime.now(),
+          endDate: endingDate ??= DateTime.now(),
+          isDone: false,
+          priority: priorityValue,
+          repeat: repeatValue,
+          category: taskTypeValue);
+
+      widget.databaseHelper.insertTask(task);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("New Task Added"),
+      ));
+      Navigator.of(context).pop();
+    } else {
+      setState(() {
+        showWarning = true;
+      });
+    }
   }
 
   @override
@@ -42,39 +116,53 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    title = value;
+                    showWarning = false;
+                  });
+                },
+                decoration: const InputDecoration(
                   labelText: 'Task Title',
                 ),
               ),
-              const SizedBox(height: 16.0),
+              spaceH(6),
+              if (showWarning)
+                const Text(
+                  'Please enter a title',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              spaceH(16),
               Row(
                 children: [
                   const Text('Repeat:'),
                   const SizedBox(width: 8.0),
                   DropdownButton<String>(
                     onChanged: (value) => changeRepeatValue(value.toString()),
-                    value: repeatValue,
-                    items: const [
+                    value: repeatValue.name,
+                    items: [
                       DropdownMenuItem(
-                        value: 'Never',
-                        child: Text('Never'),
+                        value: Repeat.never.name,
+                        child: const Text('Never'),
                       ),
                       DropdownMenuItem(
-                        value: 'Daily',
-                        child: Text('Daily'),
+                        value: Repeat.daily.name,
+                        child: const Text('Daily'),
                       ),
                       DropdownMenuItem(
-                        value: 'Weekly',
-                        child: Text('Weekly'),
+                        value: Repeat.weekly.name,
+                        child: const Text('Weekly'),
                       ),
                       DropdownMenuItem(
-                        value: 'Monthly',
-                        child: Text('Monthly'),
+                        value: Repeat.monthly.name,
+                        child: const Text('Monthly'),
                       ),
                       DropdownMenuItem(
-                        value: 'Yearly',
-                        child: Text('Yearly'),
+                        value: Repeat.yearly.name,
+                        child: const Text('Yearly'),
                       ),
                     ],
                   ),
@@ -87,19 +175,23 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   const SizedBox(width: 8.0),
                   DropdownButton<String>(
                     onChanged: (value) => changeTaskTypeValue(value.toString()),
-                    value: taskTypeValue,
-                    items: const [
+                    value: taskTypeValue.name,
+                    items: [
                       DropdownMenuItem(
-                        value: 'Work',
-                        child: Text('Work'),
+                        value: TaskCategory.others.name,
+                        child: const Text('Others'),
                       ),
                       DropdownMenuItem(
-                        value: 'Personal',
-                        child: Text('Personal'),
+                        value: TaskCategory.personal.name,
+                        child: const Text('Personal'),
                       ),
                       DropdownMenuItem(
-                        value: 'Shopping',
-                        child: Text('Shopping'),
+                        value: TaskCategory.shopping.name,
+                        child: const Text('Shopping'),
+                      ),
+                      DropdownMenuItem(
+                        value: TaskCategory.work.name,
+                        child: const Text('Work'),
                       ),
                     ],
                   ),
@@ -112,33 +204,37 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   const SizedBox(width: 8.0),
                   DropdownButton<String>(
                     onChanged: (value) => changePriorityValue(value.toString()),
-                    value: priorityValue,
-                    items: const [
+                    value: priorityValue.name,
+                    items: [
                       DropdownMenuItem(
-                        value: 'Low',
-                        child: Text('Low'),
+                        value: Priority.low.name,
+                        child: const Text('Low'),
                       ),
                       DropdownMenuItem(
-                        value: 'Medium',
-                        child: Text('Medium'),
+                        value: Priority.medium.name,
+                        child: const Text('Medium'),
                       ),
                       DropdownMenuItem(
-                        value: 'High',
-                        child: Text('High'),
+                        value: Priority.high.name,
+                        child: const Text('High'),
                       ),
                     ],
                   ),
                 ],
               ),
               const SizedBox(height: 16.0),
-              const TextField(
+              TextField(
+                onChanged: (value) => setState(() {
+                  description = value;
+                }),
                 cursorWidth: 21.0,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Task description',
                 ),
               ),
               const SizedBox(height: 16.0),
-              Text('Due Date: $endingDate'),
+              Text(
+                  'Due Date: ${endingDate == null ? 'Today' : endingDate.toString().substring(0, 16)}'),
               const SizedBox(height: 16.0),
               TextButton(
                 onPressed: () async {
@@ -166,7 +262,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                           newDate.day,
                           newTime.hour,
                           newTime.minute,
-                        ).toString().substring(0, 16);
+                        );
                       });
                     }
                   }
@@ -180,9 +276,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
       actions: [
         TextButton(
           child: const Text('Add'),
-          onPressed: () {
-            // Perform reschedule action
-          },
+          onPressed: () => addNewTask(),
         ),
         TextButton(
           child: const Text('Cancel'),

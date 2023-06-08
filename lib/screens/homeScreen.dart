@@ -2,12 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_todos/styles/textStyle.dart';
+import '../db/database_helper.dart';
 import './components/todo_item_widget.dart';
 import '../data/todo_item.dart';
 import 'components/myAlertDialog.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -15,28 +18,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // ignore: non_constant_identifier_names
-  ToDoItem first_item = ToDoItem(
-    title: 'First 545',
-    description: 'This is my first todo',
-    category: Category.shopping,
-    priority: Priority.low,
-  );
-
-  // ignore: non_constant_identifier_names
-  ToDoItem second_item = ToDoItem(
-    title: 'Second todo',
-    description: 'This is my Second todo',
-    category: Category.work,
-    priority: Priority.medium,
-  );
   List<ToDoItem> myTodos = [];
+  DatabaseHelper databaseHelper = DatabaseHelper();
   @override
   void initState() {
     super.initState();
+    databaseHelper.getToDoItems().then((value) {
+      setState(() {
+        myTodos = value;
+        print(value == null ? 'null' : value.length);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    databaseHelper.printHi();
     return Scaffold(
       body: Stack(
         children: [
@@ -84,7 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return TaskAlertDialog();
+                    return TaskAlertDialog(
+                      databaseHelper: databaseHelper,
+                    );
                   },
                 );
               },
