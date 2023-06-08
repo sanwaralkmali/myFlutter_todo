@@ -15,9 +15,9 @@ TextStyle itemTitleText = const TextStyle(
 );
 
 TextStyle dateTextStyle = const TextStyle(
-  fontSize: 14,
+  fontSize: 12,
   fontWeight: FontWeight.w100,
-  color: Color.fromARGB(255, 110, 105, 105),
+  color: Color.fromARGB(255, 39, 39, 39),
 );
 
 TextStyle descriptionStyle = const TextStyle(
