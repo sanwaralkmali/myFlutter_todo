@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import './screens/home.dart' show MyHomePage;
+import 'db/database_helper.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final DatabaseHelper databaseHelper = DatabaseHelper();
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    DatabaseHelper.initializeDatabase();
+
     return MaterialApp(
       title: 'My TODOs',
       theme: ThemeData(

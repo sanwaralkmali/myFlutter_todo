@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_todos/screens/components/editAlertDialog.dart';
 import '../../data/todo_item.dart';
 import '../../styles/textStyle.dart';
 import 'space.dart';
@@ -38,9 +39,12 @@ class _TodoItemState extends State<TodoItem> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.item.title,
-                        style: itemTitleText,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Text(
+                          widget.item.title,
+                          style: itemTitleText,
+                        ),
                       ),
                       Row(
                         children: [
@@ -58,9 +62,18 @@ class _TodoItemState extends State<TodoItem> {
                   ),
                   Expanded(
                     child: Align(
-                      alignment: Alignment.centerRight,
-                      child: widget.item.getRepeatIcon(48),
-                    ),
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return EditAlertDialog(item: widget.item);
+                              },
+                            );
+                          },
+                          child: const Icon(Icons.edit),
+                        )),
                   ),
                 ],
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ToDoItem {
+  int? id;
   String title;
   String description;
   DateTime? startDate;
@@ -11,6 +12,7 @@ class ToDoItem {
   TaskCategory category;
 
   ToDoItem({
+    required this.id,
     required this.title,
     required this.description,
     this.startDate,
@@ -139,38 +141,29 @@ class ToDoItem {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'title': title,
       'description': description,
       'startDate': startDate.toString(),
       'endDate': endDate.toString(),
-      'isDone': isDone,
+      'isDone': isDone ? 1 : 0,
       'priority': priority.name,
       'repeat': repeat.name,
-      'Taskcategory': category.name,
+      'category': category.name,
     };
   }
 
   factory ToDoItem.fromMap(Map<String, dynamic> map) {
-    print(map);
-
-    print('title: ${map['title']}');
-    print('description: ${map['description']}');
-    // print('startDate: ${}');
-    // print('endDate: ${}');
-    print('isDone: ${map['isDone']}');
-    print('priority: ${map['priority']}');
-    print('repeat: ${map['repeat']}');
-    print('category: ${map['category']}');
-
     return ToDoItem(
+      id: map['id'],
       title: map['title'],
       description: map['description'],
-      startDate: DateTime.parse(map['startDate'].toString().substring(0, 16)),
-      endDate: DateTime.parse(map['endDate'].toString().substring(0, 16)),
+      startDate: DateTime.parse(map['startDate']),
+      endDate: DateTime.parse(map['endDate']),
       isDone: map['isDone'] == 1,
-      priority: _parsePriority(map['priority'] ?? 'low'),
-      repeat: _parseRepeat(map['repeat'] ?? 'never'),
-      category: _parseTaskCategory(map['category'] ?? 'others'),
+      priority: _parsePriority(map['priority']),
+      repeat: _parseRepeat(map['repeat']),
+      category: _parseTaskCategory(map['category']),
     );
   }
 
@@ -217,6 +210,18 @@ class ToDoItem {
       default:
         return TaskCategory.others;
     }
+  }
+
+  updateValues(title, description, startDate, endDate, isDone, priority, repeat,
+      category) {
+    this.title = title;
+    this.description = description;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.isDone = isDone;
+    this.priority = priority;
+    this.repeat = repeat;
+    this.category = category;
   }
 }
 

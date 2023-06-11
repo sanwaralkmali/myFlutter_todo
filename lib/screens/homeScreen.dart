@@ -19,21 +19,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // ignore: non_constant_identifier_names
   List<ToDoItem> myTodos = [];
-  DatabaseHelper databaseHelper = DatabaseHelper();
+  final DatabaseHelper databaseHelper = DatabaseHelper();
   @override
   void initState() {
     super.initState();
     databaseHelper.getToDoItems().then((value) {
       setState(() {
         myTodos = value;
-        print(value == null ? 'null' : value.length);
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    databaseHelper.printHi();
+    setState(() {
+      databaseHelper.getToDoItems().then((value) {
+        setState(() {
+          myTodos = value;
+        });
+      });
+    });
+
     return Scaffold(
       body: Stack(
         children: [
@@ -63,13 +69,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: myTodos.length,
-                  itemBuilder: (context, index) {
-                    return TodoItem(
-                      item: myTodos[index],
-                    );
-                  },
-                ),
+                    itemCount: myTodos.length,
+                    itemBuilder: (context, index) {
+                      int reverseIndex = myTodos.length - 1 - index;
+                      return TodoItem(
+                        item: myTodos[reverseIndex],
+                      );
+                    }),
               ),
             ],
           ),
@@ -81,9 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return TaskAlertDialog(
-                      databaseHelper: databaseHelper,
-                    );
+                    return TaskAlertDialog();
                   },
                 );
               },

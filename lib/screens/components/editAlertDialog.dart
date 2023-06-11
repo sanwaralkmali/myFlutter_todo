@@ -5,21 +5,44 @@ import 'package:my_todos/screens/components/space.dart';
 import '../../data/todo_item.dart';
 import '../../db/database_helper.dart';
 
-class TaskAlertDialog extends StatefulWidget {
-  TaskAlertDialog({Key? key}) : super(key: key);
+class EditAlertDialog extends StatefulWidget {
+  EditAlertDialog({Key? key, required this.item}) : super(key: key);
+  ToDoItem item;
+
   final DatabaseHelper databaseHelper = DatabaseHelper();
   @override
-  _TaskAlertDialogState createState() => _TaskAlertDialogState();
+  _EditAlertDialogState createState() => _EditAlertDialogState();
 }
 
-class _TaskAlertDialogState extends State<TaskAlertDialog> {
-  String title = '';
-  String description = '';
-  Repeat repeatValue = Repeat.never;
-  TaskCategory taskTypeValue = TaskCategory.others;
-  Priority priorityValue = Priority.low;
+class _EditAlertDialogState extends State<EditAlertDialog> {
+  int? id;
+  String? title;
+  String? description;
+  Repeat? repeatValue;
+  TaskCategory? taskTypeValue;
+  Priority? priorityValue;
   DateTime? endingDate;
-  bool showWarning = false;
+  DateTime? startingDate;
+  bool? showWarning;
+  bool? isCompleted;
+  final TextEditingController _titleController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    id = widget.item.id;
+    title = widget.item.title;
+    description = widget.item.description;
+    repeatValue = widget.item.repeat;
+    isCompleted = widget.item.isDone;
+    startingDate = widget.item.startDate;
+    taskTypeValue = widget.item.category;
+    priorityValue = widget.item.priority;
+    endingDate = widget.item.endDate;
+    showWarning = false;
+    _titleController.text =
+        widget.item.title; // Assuming `task` is your task object
+  }
 
   void changeRepeatValue(String value) {
     setState(() {
@@ -84,25 +107,18 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
     });
   }
 
-  addNewTask() {
-    if (title.isNotEmpty) {
-      if (description.isEmpty) description = 'No description provided';
+  editTask() {
+    if (title != null && title!.isNotEmpty) {
+      if (description != null && description!.isEmpty) {
+        description = 'No description provided';
+      }
+      widget.item.updateValues(title, description, startingDate, endingDate,
+          isCompleted, priorityValue, repeatValue, taskTypeValue);
 
-      ToDoItem task = ToDoItem(
-          id: null,
-          title: title,
-          description: description,
-          startDate: DateTime.now(),
-          endDate: endingDate ??= DateTime.now(),
-          isDone: false,
-          priority: priorityValue,
-          repeat: repeatValue,
-          category: taskTypeValue);
-
-      widget.databaseHelper.insertTask(task);
+      widget.databaseHelper.updateItem(widget.item);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
-          "New Task Added",
+          "Edited Successfully",
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color.fromARGB(255, 207, 255, 209),
@@ -135,12 +151,13 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                     showWarning = false;
                   });
                 },
+                controller: _titleController,
                 decoration: const InputDecoration(
-                  labelText: 'Task Title',
+                  labelText: 'Add Title',
                 ),
               ),
               spaceH(6),
-              if (showWarning)
+              if (showWarning!)
                 const Text(
                   'Please enter a title',
                   style: TextStyle(
@@ -154,7 +171,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   const SizedBox(width: 8.0),
                   DropdownButton<String>(
                     onChanged: (value) => changeRepeatValue(value.toString()),
-                    value: repeatValue.name,
+                    value: repeatValue?.name,
                     items: [
                       DropdownMenuItem(
                         value: Repeat.never.name,
@@ -187,7 +204,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   const SizedBox(width: 8.0),
                   DropdownButton<String>(
                     onChanged: (value) => changeTaskTypeValue(value.toString()),
-                    value: taskTypeValue.name,
+                    value: taskTypeValue?.name,
                     items: [
                       DropdownMenuItem(
                         value: TaskCategory.others.name,
@@ -216,7 +233,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   const SizedBox(width: 8.0),
                   DropdownButton<String>(
                     onChanged: (value) => changePriorityValue(value.toString()),
-                    value: priorityValue.name,
+                    value: priorityValue?.name,
                     items: [
                       DropdownMenuItem(
                         value: Priority.low.name,
@@ -287,8 +304,8 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
       ),
       actions: [
         TextButton(
-          child: const Text('Add'),
-          onPressed: () => addNewTask(),
+          child: const Text('Edit'),
+          onPressed: () => editTask(),
         ),
         TextButton(
           child: const Text('Cancel'),

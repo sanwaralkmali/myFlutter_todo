@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../exportScreens.dart';
-import '../db/database_helper.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
@@ -15,7 +14,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DatabaseHelper db = DatabaseHelper();
   int _index = 0;
   final List<Widget> _screens = const <Widget>[
     HomeScreen(),
@@ -23,6 +21,11 @@ class _MyHomePageState extends State<MyHomePage> {
     UpcomingScreen(),
     SettingsScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void navigate(int index) {
     setState(() {

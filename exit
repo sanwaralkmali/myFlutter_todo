@@ -1,0 +1,19 @@
+[33mcommit 21fa5651a1ebdde3f5e04d7e37c776c26c2eaeab[m[33m ([m[1;36mHEAD -> [m[1;32mdatabase[m[33m)[m
+Author: sanwaralkmali <mtnshsalah@gmail.com>
+Date:   Thu Jun 8 23:05:43 2023 +0300
+
+    insert new Item to database,
+    TODOS: update your task in the database
+           Delete a task from the database
+
+[33mcommit 9c6863f87fbe48097163298331724f3137a88188[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: sanwaralkmali <mtnshsalah@gmail.com>
+Date:   Thu Jun 8 14:01:46 2023 +0300
+
+    Add new todo
+
+[33mcommit da68494906a0640579217668bf6b4f781995c32a[m
+Author: sanwaralkmali <mtnshsalah@gmail.com>
+Date:   Wed Jun 7 09:00:09 2023 +0300
+
+    Home Screen of My TODOs application!

@@ -15,34 +15,39 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await initDatabase();
+    _database = await initializeDatabase();
     return _database!;
   }
 
-  Future<Database> initDatabase() async {
+  final StreamController<List<ToDoItem>> _todoItemsController =
+      StreamController<List<ToDoItem>>.broadcast();
+
+  Stream<List<ToDoItem>> get todoItemsStream => _todoItemsController.stream;
+
+  static Future<Database> initializeDatabase() async {
     String path = join(await getDatabasesPath(), 'tasks.db');
     return openDatabase(
       path,
       version: 1,
       onCreate: (db, version) async {
-        await db.execute(
-            '''CREATE TABLE tasks(id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                  title TEXT, 
-                                  description TEXT,
-                                  startDate TEXT,
-                                  endDate TEXT,
-                                  isDone BOOLEAN,
-                                  priority TEXT,
-                                  repeat TEXT,
-                                  TaskCategory TEXT
-                                  )
-                                  ''');
+        await db.execute('''
+          CREATE TABLE tasks(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            title TEXT, 
+            description TEXT,
+            startDate TEXT,
+            endDate TEXT,
+            isDone BOOLEAN,
+            priority TEXT,
+            repeat TEXT,
+            category TEXT
+          )
+        ''');
       },
     );
   }
 
   Future<void> insertTask(ToDoItem task) async {
-    print('Starting insert');
     final db = await database;
     await db.insert(
       'tasks',
@@ -50,7 +55,7 @@ class DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    print('Task inserted');
+    _todoItemsController.add(await getToDoItems());
   }
 
   Future<List<ToDoItem>> getToDoItems() async {
@@ -68,7 +73,14 @@ class DatabaseHelper {
     db.close();
   }
 
-  void printHi() {
-    print('Hi');
+  Future<void> updateItem(ToDoItem updatedItem) async {
+    final db = await database;
+
+    await db.update(
+      'tasks',
+      updatedItem.toMap(),
+      where: 'id = ?',
+      whereArgs: [updatedItem.id],
+    );
   }
 }
