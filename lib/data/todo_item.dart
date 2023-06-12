@@ -5,6 +5,7 @@ class ToDoItem {
   String title;
   String description;
   DateTime? startDate;
+  DateTime? scheduledDate;
   DateTime? endDate;
   bool isDone;
   Priority priority;
@@ -17,6 +18,7 @@ class ToDoItem {
     required this.description,
     this.startDate,
     this.endDate,
+    this.scheduledDate,
     this.isDone = false,
     required this.priority,
     this.repeat = Repeat.never,
@@ -145,7 +147,9 @@ class ToDoItem {
       'title': title,
       'description': description,
       'startDate': startDate.toString(),
-      'endDate': endDate.toString(),
+      'scheduledDate': scheduledDate.toString(),
+      // ignore: prefer_null_aware_operators
+      'endDate': endDate != null ? endDate.toString() : null,
       'isDone': isDone ? 1 : 0,
       'priority': priority.name,
       'repeat': repeat.name,
@@ -159,7 +163,8 @@ class ToDoItem {
       title: map['title'],
       description: map['description'],
       startDate: DateTime.parse(map['startDate']),
-      endDate: DateTime.parse(map['endDate']),
+      scheduledDate: DateTime.parse(map['scheduledDate']),
+      endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
       isDone: map['isDone'] == 1,
       priority: _parsePriority(map['priority']),
       repeat: _parseRepeat(map['repeat']),
@@ -212,16 +217,35 @@ class ToDoItem {
     }
   }
 
-  updateValues(title, description, startDate, endDate, isDone, priority, repeat,
-      category) {
+  updateValues(title, description, startDate, scheduledDate, isDone, priority,
+      repeat, category) {
     this.title = title;
     this.description = description;
     this.startDate = startDate;
-    this.endDate = endDate;
+    this.scheduledDate = scheduledDate;
+    endDate = endDate;
     this.isDone = isDone;
     this.priority = priority;
     this.repeat = repeat;
     this.category = category;
+  }
+
+  String getTimeTaken() {
+    Duration difference = endDate!.difference(startDate!);
+    int days = difference.inDays;
+    int hours = difference.inHours - days * 24;
+    int minutes = difference.inMinutes - hours * 60 - days * 24 * 60;
+    int seconds = difference.inSeconds -
+        minutes * 60 -
+        hours * 60 * 60 -
+        days * 24 * 60 * 60;
+
+    String time = '';
+    if (days > 0) time += '$days days ';
+    if (hours > 0) time += '$hours hours ';
+    if (minutes > 0) time += '$minutes minutes ';
+    if (seconds > 0) time += '$seconds seconds ';
+    return time;
   }
 }
 

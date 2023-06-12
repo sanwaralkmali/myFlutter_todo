@@ -22,18 +22,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final DatabaseHelper databaseHelper = DatabaseHelper();
   @override
   void initState() {
-    super.initState();
-    databaseHelper.getToDoItems().then((value) {
+    databaseHelper.getTasksByDate(DateTime.now()).then((value) {
       setState(() {
         myTodos = value;
       });
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     setState(() {
-      databaseHelper.getToDoItems().then((value) {
+      databaseHelper.getTasksByDate(DateTime.now()).then((value) {
         setState(() {
           myTodos = value;
         });

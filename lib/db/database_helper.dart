@@ -36,7 +36,8 @@ class DatabaseHelper {
             title TEXT, 
             description TEXT,
             startDate TEXT,
-            endDate TEXT,
+            scheduledDate TEXT,
+            endDate TEXT NULL,   
             isDone BOOLEAN,
             priority TEXT,
             repeat TEXT,
@@ -66,7 +67,19 @@ class DatabaseHelper {
     });
   }
 
-  // Other CRUD operations (update, delete) can be implemented similarly
+  Future<List<ToDoItem>> getTasksByDate(DateTime scheduledDate) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'tasks',
+      where: 'scheduledDate LIKE ?',
+      whereArgs: [
+        '%${scheduledDate.year}-${scheduledDate.month.toString().padLeft(2, '0')}-${scheduledDate.day.toString().padLeft(2, '0')}%'
+      ],
+    );
+    return List.generate(maps.length, (index) {
+      return ToDoItem.fromMap(maps[index]);
+    });
+  }
 
   Future<void> close() async {
     final db = await database;

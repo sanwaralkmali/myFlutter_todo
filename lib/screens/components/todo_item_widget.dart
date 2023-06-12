@@ -3,10 +3,13 @@ import 'package:my_todos/screens/components/editAlertDialog.dart';
 import '../../data/todo_item.dart';
 import '../../styles/textStyle.dart';
 import 'space.dart';
+import '../../db/database_helper.dart';
 
 // ignore: must_be_immutable
 class TodoItem extends StatefulWidget {
   ToDoItem item;
+  final DatabaseHelper databaseHelper = DatabaseHelper();
+
   TodoItem({super.key, required this.item});
 
   @override
@@ -96,7 +99,7 @@ class _TodoItemState extends State<TodoItem> {
                   ),
                   spaceH(10),
                   Text(
-                    'Ending date :  ${widget.item.endDate == null ? 'Today' : widget.item.endDate.toString().substring(0, 17)}',
+                    'Due to :  ${widget.item.scheduledDate.toString().substring(0, 10) == DateTime.now().toString().substring(0, 10) ? 'Today' : widget.item.scheduledDate.toString().substring(0, 17)}',
                     style: dateTextStyle,
                   ),
                   Row(
@@ -122,13 +125,14 @@ class _TodoItemState extends State<TodoItem> {
 
                             if (newTime != null) {
                               setState(() {
-                                widget.item.endDate = DateTime(
+                                widget.item.scheduledDate = DateTime(
                                   newDate.year,
                                   newDate.month,
                                   newDate.day,
                                   newTime.hour,
                                   newTime.minute,
                                 );
+                                widget.databaseHelper.updateItem(widget.item);
                               });
                             }
                           }
@@ -140,6 +144,14 @@ class _TodoItemState extends State<TodoItem> {
                         onChanged: (bool? value) {
                           setState(() {
                             widget.item.isDone = value!;
+                            if (widget.item.isDone) {
+                              widget.item.endDate = DateTime.now();
+                              String timeTaken = widget.item.getTimeTaken();
+                              print(timeTaken);
+                            } else {
+                              widget.item.endDate = null;
+                            }
+                            widget.databaseHelper.updateItem(widget.item);
                           });
                         },
                       ),

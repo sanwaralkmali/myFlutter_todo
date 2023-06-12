@@ -1,9 +1,11 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:my_todos/data/todo_item.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'components/space.dart';
+import '../db/database_helper.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -18,6 +20,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
   final DateTime _firstDay = DateTime.now().subtract(const Duration(days: 28));
   final DateTime _lastDay = DateTime.now().subtract(const Duration(days: 1));
   DateTime _selectedDay = DateTime.now().subtract(const Duration(days: 1));
+  List<ToDoItem> myTodos = [];
+  final DatabaseHelper databaseHelper = DatabaseHelper();
+
+  @override
+  void initState() {
+    databaseHelper.getTasksByDate(_selectedDay).then((value) {
+      setState(() {
+        myTodos = value;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +46,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onDaySelected: (day, _) {
               setState(() {
                 _selectedDay = day;
+                databaseHelper.getTasksByDate(_selectedDay).then((value) {
+                  myTodos = value;
+                });
               });
             },
             // Add more customization as per your requirement
@@ -39,23 +56,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
           spaceH(16),
           Text(
             _getFormattedSelectedDate(),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           spaceH(16),
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: tasks.length,
+              itemCount: myTodos.length,
               itemBuilder: (context, index) {
-                final task = tasks[index];
+                final task = myTodos[index];
+                String timeTaken = task.getTimeTaken();
+                print(task.getTimeTaken());
                 return ListTile(
                   title: Text(task.title),
-                  subtitle: Text(task.description),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(task.description),
+                      Text(
+                        'Taken time $timeTaken',
+                      ),
+                    ],
+                  ),
                   trailing: Checkbox(
-                    value: task.isCompleted,
+                    value: task.isDone,
                     onChanged: (value) {
                       setState(() {
-                        task.isCompleted = value!;
+                        task.isDone = value!;
                       });
                     },
                   ),
@@ -74,38 +104,3 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return formattedDate.toUpperCase();
   }
 }
-
-class Task {
-  final String title;
-  final String description;
-  bool isCompleted;
-
-  Task(
-      {required this.title,
-      required this.description,
-      required this.isCompleted});
-}
-
-List<Task> tasks = [
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  Task(title: 'Task 1', description: 'Description 1', isCompleted: true),
-  Task(title: 'Task 2', description: 'Description 2', isCompleted: false),
-  // Add more tasks here
-];

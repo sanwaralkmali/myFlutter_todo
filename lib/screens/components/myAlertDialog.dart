@@ -19,6 +19,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
   TaskCategory taskTypeValue = TaskCategory.others;
   Priority priorityValue = Priority.low;
   DateTime? endingDate;
+  DateTime? scheduledDate;
   bool showWarning = false;
 
   void changeRepeatValue(String value) {
@@ -93,7 +94,8 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
           title: title,
           description: description,
           startDate: DateTime.now(),
-          endDate: endingDate ??= DateTime.now(),
+          scheduledDate: scheduledDate ??= DateTime.now(),
+          endDate: endingDate,
           isDone: false,
           priority: priorityValue,
           repeat: repeatValue,
@@ -151,7 +153,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
               Row(
                 children: [
                   const Text('Repeat:'),
-                  const SizedBox(width: 8.0),
+                  spaceW(8),
                   DropdownButton<String>(
                     onChanged: (value) => changeRepeatValue(value.toString()),
                     value: repeatValue.name,
@@ -180,7 +182,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
+              spaceH(16),
               Row(
                 children: [
                   const Text('Task Type:'),
@@ -209,11 +211,11 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
+              spaceH(16),
               Row(
                 children: [
                   const Text('Priority:'),
-                  const SizedBox(width: 8.0),
+                  spaceW(8),
                   DropdownButton<String>(
                     onChanged: (value) => changePriorityValue(value.toString()),
                     value: priorityValue.name,
@@ -234,7 +236,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
+              spaceH(16),
               TextField(
                 onChanged: (value) => setState(() {
                   description = value;
@@ -246,8 +248,8 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
               ),
               const SizedBox(height: 16.0),
               Text(
-                  'Due Date: ${endingDate == null ? 'Today' : endingDate.toString().substring(0, 16)}'),
-              const SizedBox(height: 16.0),
+                  'Due Date: ${scheduledDate == null ? 'Today' : scheduledDate.toString().substring(0, 16)}'),
+              spaceH(16),
               TextButton(
                 onPressed: () async {
                   TimeOfDay selectedTime = TimeOfDay.now();
@@ -268,7 +270,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
 
                     if (newTime != null) {
                       setState(() {
-                        endingDate = DateTime(
+                        scheduledDate = DateTime(
                           newDate.year,
                           newDate.month,
                           newDate.day,

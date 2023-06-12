@@ -21,8 +21,8 @@ class _EditAlertDialogState extends State<EditAlertDialog> {
   Repeat? repeatValue;
   TaskCategory? taskTypeValue;
   Priority? priorityValue;
-  DateTime? endingDate;
   DateTime? startingDate;
+  DateTime? scheduledDate;
   bool? showWarning;
   bool? isCompleted;
   final TextEditingController _titleController = TextEditingController();
@@ -38,7 +38,7 @@ class _EditAlertDialogState extends State<EditAlertDialog> {
     startingDate = widget.item.startDate;
     taskTypeValue = widget.item.category;
     priorityValue = widget.item.priority;
-    endingDate = widget.item.endDate;
+    scheduledDate = widget.item.scheduledDate;
     showWarning = false;
     _titleController.text =
         widget.item.title; // Assuming `task` is your task object
@@ -112,7 +112,7 @@ class _EditAlertDialogState extends State<EditAlertDialog> {
       if (description != null && description!.isEmpty) {
         description = 'No description provided';
       }
-      widget.item.updateValues(title, description, startingDate, endingDate,
+      widget.item.updateValues(title, description, startingDate, scheduledDate,
           isCompleted, priorityValue, repeatValue, taskTypeValue);
 
       widget.databaseHelper.updateItem(widget.item);
@@ -262,8 +262,7 @@ class _EditAlertDialogState extends State<EditAlertDialog> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              Text(
-                  'Due Date: ${endingDate == null ? 'Today' : endingDate.toString().substring(0, 16)}'),
+              Text('Due Date: $scheduledDate'),
               const SizedBox(height: 16.0),
               TextButton(
                 onPressed: () async {
@@ -285,7 +284,7 @@ class _EditAlertDialogState extends State<EditAlertDialog> {
 
                     if (newTime != null) {
                       setState(() {
-                        endingDate = DateTime(
+                        scheduledDate = DateTime(
                           newDate.year,
                           newDate.month,
                           newDate.day,
