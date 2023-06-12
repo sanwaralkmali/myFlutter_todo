@@ -96,4 +96,14 @@ class DatabaseHelper {
       whereArgs: [updatedItem.id],
     );
   }
+
+  Future<void> deleteItem(int id) async {
+    final db = await database;
+
+    await db.delete(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
 }

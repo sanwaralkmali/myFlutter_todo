@@ -133,9 +133,9 @@ class ToDoItem {
       case Priority.low:
         return const Color.fromARGB(255, 107, 169, 109);
       case Priority.medium:
-        return const Color.fromARGB(46, 192, 232, 91);
+        return const Color.fromARGB(217, 63, 155, 198);
       case Priority.high:
-        return const Color.fromRGBO(222, 81, 76, 32);
+        return const Color.fromARGB(237, 155, 55, 52);
       default:
         return const Color.fromARGB(255, 228, 220, 140);
     }
