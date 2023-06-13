@@ -75,7 +75,8 @@ class _TodoItemState extends State<TodoItem> {
                               },
                             );
                           },
-                          child: const Icon(Icons.edit),
+                          child: const Icon(Icons.edit,
+                              color: Color.fromARGB(255, 0, 0, 0)),
                         )),
                   ),
                 ],
@@ -146,8 +147,6 @@ class _TodoItemState extends State<TodoItem> {
                             widget.item.isDone = value!;
                             if (widget.item.isDone) {
                               widget.item.endDate = DateTime.now();
-                              String timeTaken = widget.item.getTimeTaken();
-                              print(timeTaken);
                             } else {
                               widget.item.endDate = null;
                             }

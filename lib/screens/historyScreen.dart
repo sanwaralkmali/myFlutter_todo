@@ -25,7 +25,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   void initState() {
-    databaseHelper.getTasksByDate(_selectedDay).then((value) {
+    databaseHelper.getTasksByDate(DateTime.now()).then((value) {
       setState(() {
         myTodos = value;
       });
@@ -46,7 +46,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onDaySelected: (day, _) {
               setState(() {
                 _selectedDay = day;
-                databaseHelper.getTasksByDate(_selectedDay).then((value) {
+                databaseHelper.getTasksByDate(DateTime.now()).then((value) {
                   myTodos = value;
                 });
               });
@@ -68,8 +68,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               itemCount: myTodos.length,
               itemBuilder: (context, index) {
                 final task = myTodos[index];
-                String timeTaken = task.getTimeTaken();
-                print(task.getTimeTaken());
+                String timeTaken =
+                    task.endDate != null ? task.getTimeTaken() : 'NOT DONE';
                 return ListTile(
                   title: Text(task.title),
                   subtitle: Column(
@@ -81,13 +81,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ),
                     ],
                   ),
-                  trailing: Checkbox(
-                    value: task.isDone,
-                    onChanged: (value) {
-                      setState(() {
-                        task.isDone = value!;
-                      });
-                    },
+                  trailing: Icon(
+                    task.isDone ? Icons.check_circle : Icons.cancel,
+                    color: task.isDone ? Colors.green : Colors.red,
                   ),
                 );
               },
