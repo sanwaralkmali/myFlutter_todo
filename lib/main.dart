@@ -1,33 +1,66 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './screens/home.dart' show MyHomePage;
 import 'db/database_helper.dart';
+import 'welcomingScreen.dart';
+import 'styles/theme.dart';
 
 void main() async {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool settingsExist =
+      prefs.containsKey('isDarkMode') && prefs.containsKey('fontFamily');
+
+  runApp(MyApp(settingsExist: settingsExist));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final bool? settingsExist;
+
+  const MyApp({Key? key, this.settingsExist}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final DatabaseHelper databaseHelper = DatabaseHelper();
 
-  MyApp({super.key});
+  bool isDarkMode = false;
+
+  String fontFamily = 'Roboto';
 
   @override
   Widget build(BuildContext context) {
+    _loadSettings();
     DatabaseHelper.initializeDatabase();
-
     return MaterialApp(
-      title: 'My TODOs',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 255, 255, 255)),
-        useMaterial3: true,
-        fontFamily: 'Ubuntu',
-        primarySwatch: Colors.blue,
+      title: 'ToDoHub',
+      theme: getTheme(isDarkMode, fontFamily)[0].copyWith(
+        textTheme: getTheme(isDarkMode, fontFamily)[0].textTheme.apply(
+              fontFamily: fontFamily,
+            ),
+        backgroundColor: !isDarkMode
+            ? const Color.fromARGB(255, 220, 217, 197)
+            : const Color.fromARGB(223, 50, 49, 49),
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(
-        title: "Today's To",
-      ),
+      home: widget.settingsExist!
+          ? const MyHomePage(
+              title: 'ToDoHub',
+            )
+          : const WelcomingScreen(),
     );
+  }
+
+  Future<void> _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      fontFamily = prefs.getString('fontFamily') ?? 'Roboto';
+      isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    });
   }
 }

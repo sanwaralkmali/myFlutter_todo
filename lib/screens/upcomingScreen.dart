@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_todos/data/todo_item.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'components/editAlertDialog.dart';
@@ -18,11 +19,14 @@ class UpcomingScreen extends StatefulWidget {
 
 class _UpcomingScreenState extends State<UpcomingScreen> {
   final CalendarFormat _calendarFormat = CalendarFormat.week;
-  final DateTime _firstDay = DateTime.now().add(const Duration(days: 1));
-  final DateTime _lastDay = DateTime.now().add(const Duration(days: 7));
+  final DateTime _firstDay = DateTime.now().subtract(const Duration(days: 1));
+  final DateTime _lastDay = DateTime.now().add(const Duration(days: 14));
   DateTime _selectedDay = DateTime.now().add(const Duration(days: 1));
+
   List<ToDoItem> myTodos = [];
   final DatabaseHelper databaseHelper = DatabaseHelper();
+  late bool isDarkMode = false;
+  late Color textColor = Colors.black;
 
   @override
   void initState() {
@@ -31,6 +35,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
         myTodos = value;
       });
     });
+    _loadSettings();
     super.initState();
   }
 
@@ -41,6 +46,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
           myTodos = value;
         });
       });
+      _loadSettings();
     });
   }
 
@@ -63,13 +69,16 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                 });
               });
             },
+            // Add more customization as per your requirement
           ),
           spaceH(16),
           Text(
             _getFormattedSelectedDate(),
-            style: titleStyle,
+            style: titleStyle.copyWith(
+              color: textColor,
+            ),
           ),
-          spaceH(16),
+          spaceH(24),
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
@@ -82,34 +91,38 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: task.getPriorityColor(),
+                      color: task.getPriorityColor(isDarkMode),
                       width: 2.5,
                     ),
                   ),
                   child: ListTile(
-                    title: Text(
-                      task.title,
-                      style: itemTitleText,
-                    ),
+                    title: Text(task.title,
+                        style: itemTitleText.copyWith(
+                          color: textColor,
+                        )),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           task.description,
-                          style: descriptionStyle,
+                          style: descriptionStyle.copyWith(
+                            color: textColor,
+                          ),
                         ),
                         spaceH(2.5),
                         Text(
                           'Priority : ${myTodos[index].priority.name.toUpperCase()}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w200,
+                            color: textColor,
                           ),
                         ),
                         spaceH(2.5),
                         Text(
                           'Task type : ${myTodos[index].category.name.toUpperCase()}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w200,
+                            color: textColor,
                           ),
                         ),
                       ],
@@ -119,11 +132,19 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                         return [
                           const PopupMenuItem<String>(
                             value: 'edit',
-                            child: Text('Edit'),
+                            child: Text('Edit',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 119, 34, 34),
+                                )),
                           ),
                           const PopupMenuItem<String>(
                             value: 'delete',
-                            child: Text('Delete'),
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 119, 34, 34),
+                              ),
+                            ),
                           ),
                         ];
                       },
@@ -165,5 +186,13 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
     final selectedDate = _selectedDay;
     final formattedDate = DateFormat('EEEE d MMMM yyyy').format(selectedDate);
     return formattedDate.toUpperCase();
+  }
+
+  Future<void> _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isDarkMode = prefs.getBool('isDarkMode') ?? false;
+      textColor = isDarkMode ? Colors.white : Colors.black;
+    });
   }
 }

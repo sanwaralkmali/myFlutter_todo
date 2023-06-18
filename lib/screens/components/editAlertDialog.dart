@@ -117,6 +117,7 @@ class _EditAlertDialogState extends State<EditAlertDialog> {
 
       widget.databaseHelper.updateItem(widget.item);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         content: Text(
           "Edited Successfully",
           textAlign: TextAlign.center,

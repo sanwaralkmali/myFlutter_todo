@@ -61,6 +61,19 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
         case 'shopping':
           taskTypeValue = TaskCategory.shopping;
           break;
+        case 'home':
+          taskTypeValue = TaskCategory.home;
+          break;
+        case 'education':
+          taskTypeValue = TaskCategory.education;
+          break;
+        case 'finance':
+          taskTypeValue = TaskCategory.finance;
+          break;
+        case 'health':
+          taskTypeValue = TaskCategory.health;
+          break;
+
         default:
           taskTypeValue = TaskCategory.others;
       }
@@ -103,6 +116,7 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
 
       widget.databaseHelper.insertTask(task);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         content: Text(
           "New Task Added",
           textAlign: TextAlign.center,
@@ -193,19 +207,100 @@ class _TaskAlertDialogState extends State<TaskAlertDialog> {
                     items: [
                       DropdownMenuItem(
                         value: TaskCategory.others.name,
-                        child: const Text('Others'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Others'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.help_outline_rounded,
+                            ),
+                          ],
+                        ),
                       ),
                       DropdownMenuItem(
                         value: TaskCategory.personal.name,
-                        child: const Text('Personal'),
+                        child: Row(
+                          children: [
+                            const Text('Personal'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.person_outline_rounded,
+                            ),
+                          ],
+                        ),
                       ),
                       DropdownMenuItem(
                         value: TaskCategory.shopping.name,
-                        child: const Text('Shopping'),
+                        child: Row(
+                          children: [
+                            const Text('Shopping'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.shopping_cart_outlined,
+                            ),
+                          ],
+                        ),
                       ),
                       DropdownMenuItem(
                         value: TaskCategory.work.name,
-                        child: const Text('Work'),
+                        child: Row(
+                          children: [
+                            const Text('Work'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.work_outline_rounded,
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: TaskCategory.home.name,
+                        child: Row(
+                          children: [
+                            const Text('Home'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.home_outlined,
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: TaskCategory.education.name,
+                        child: Row(
+                          children: [
+                            const Text('Education'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.school_outlined,
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: TaskCategory.finance.name,
+                        child: Row(
+                          children: [
+                            const Text('Finance'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.account_balance_wallet_outlined,
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: TaskCategory.health.name,
+                        child: Row(
+                          children: [
+                            const Text('Health'),
+                            spaceW(8),
+                            const Icon(
+                              Icons.favorite_border_outlined,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

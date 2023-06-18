@@ -6,6 +6,7 @@ import '../db/database_helper.dart';
 import './components/todo_item_widget.dart';
 import '../data/todo_item.dart';
 import 'components/myAlertDialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -19,9 +20,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // ignore: non_constant_identifier_names
   List<ToDoItem> myTodos = [];
+  late bool isDarkMode = false;
+  late Color textColor = Colors.black;
   final DatabaseHelper databaseHelper = DatabaseHelper();
   @override
   void initState() {
+    _loadSettings();
     databaseHelper.getTasksByDate(DateTime.now()).then((value) {
       setState(() {
         myTodos = value;
@@ -32,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _loadSettings();
     setState(() {
       databaseHelper.getTasksByDate(DateTime.now()).then((value) {
         setState(() {
@@ -54,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Text(
                   'Today\'s Todos',
-                  style: titleStyle,
+                  style: titleStyle.copyWith(color: textColor),
                 ),
               ),
               Padding(
@@ -63,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 180.0,
                   height: 2.0,
                   child: Container(
-                    color: Colors.black,
+                    color: textColor,
                   ),
                 ),
               ),
@@ -101,5 +106,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      isDarkMode = prefs.getBool('isDarkMode') ?? false;
+      textColor = isDarkMode ? Colors.white : Colors.black;
+    });
   }
 }

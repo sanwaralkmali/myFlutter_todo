@@ -29,31 +29,6 @@ class ToDoItem {
     isDone = !isDone;
   }
 
-  Icon getPriorityIcon() {
-    switch (priority) {
-      case Priority.low:
-        return const Icon(
-          Icons.arrow_downward,
-          color: Colors.black,
-        );
-      case Priority.medium:
-        return const Icon(
-          Icons.arrow_right,
-          color: Colors.black,
-        );
-      case Priority.high:
-        return const Icon(
-          Icons.arrow_upward,
-          color: Colors.black,
-        );
-      default:
-        return const Icon(
-          Icons.arrow_right,
-          color: Colors.black,
-        );
-    }
-  }
-
   Icon getTaskCategoryIcon(double size) {
     switch (category) {
       case TaskCategory.personal:
@@ -76,7 +51,25 @@ class ToDoItem {
         );
       case TaskCategory.others:
         return Icon(
-          Icons.arrow_right,
+          Icons.help_outline,
+          color: Colors.black,
+          size: size.toDouble(),
+        );
+      case TaskCategory.home:
+        return Icon(
+          Icons.home,
+          color: Colors.black,
+          size: size.toDouble(),
+        );
+      case TaskCategory.education:
+        return Icon(
+          Icons.school,
+          color: Colors.black,
+          size: size.toDouble(),
+        );
+      case TaskCategory.health:
+        return Icon(
+          Icons.favorite,
           color: Colors.black,
           size: size.toDouble(),
         );
@@ -128,14 +121,20 @@ class ToDoItem {
     }
   }
 
-  Color getPriorityColor() {
+  Color getPriorityColor(bool isDarkMode) {
     switch (priority) {
       case Priority.low:
-        return const Color.fromARGB(255, 107, 169, 109);
+        return isDarkMode
+            ? const Color.fromARGB(184, 53, 126, 102)
+            : const Color.fromARGB(212, 41, 129, 100);
       case Priority.medium:
-        return const Color.fromARGB(217, 63, 155, 198);
+        return isDarkMode
+            ? const Color.fromARGB(230, 65, 146, 184)
+            : const Color.fromARGB(215, 53, 112, 160);
       case Priority.high:
-        return const Color.fromARGB(237, 155, 55, 52);
+        return isDarkMode
+            ? const Color.fromARGB(255, 200, 98, 94)
+            : const Color.fromARGB(255, 204, 97, 89);
       default:
         return const Color.fromARGB(255, 228, 220, 140);
     }
@@ -212,6 +211,15 @@ class ToDoItem {
         return TaskCategory.shopping;
       case 'others':
         return TaskCategory.others;
+      case 'home':
+        return TaskCategory.home;
+      case 'education':
+        return TaskCategory.education;
+      case 'finance':
+        return TaskCategory.finance;
+      case 'health':
+        return TaskCategory.health;
+
       default:
         return TaskCategory.others;
     }
@@ -253,4 +261,13 @@ enum Priority { low, medium, high }
 
 enum Repeat { never, daily, weekly, monthly, yearly }
 
-enum TaskCategory { personal, work, shopping, others }
+enum TaskCategory {
+  personal,
+  work,
+  home,
+  education,
+  finance,
+  health,
+  shopping,
+  others
+}

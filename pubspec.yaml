@@ -19,6 +19,8 @@ dependencies:
   fluttertoast: ^8.2.2
   table_calendar: ^3.0.9
   intl: ^0.18.1
+  shared_preferences: ^2.1.2
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -26,11 +28,17 @@ dev_dependencies:
 
   flutter_lints: ^2.0.0
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/flutter_logo.png"
+
 flutter:    
   uses-material-design: true
   assets:
     - assets/icons/repeat/
     - assets/icons/
+    - assets/help/
 
   fonts:
     - family: Ubuntu
@@ -47,3 +55,65 @@ flutter:
       fonts:
         - asset: fonts/Montserrat Alternates/MontserratAlternates-Black.ttf
         - asset: fonts/Montserrat Alternates/MontserratAlternates-Medium.ttf
+
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat/Montserrat-VariableFont_wght.ttf
+        - asset: fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf
+
+    - family: Bebas Neue
+      fonts:
+        - asset: fonts/Bebas_Neue/BebasNeue-Regular.ttf
+
+    - family: Caveat
+      fonts:
+        - asset: fonts/Caveat/Caveat-VariableFont_wght.ttf
+
+    - family: Chakra Petch
+      fonts:
+        - asset: fonts/Chakra_Petch/ChakraPetch-Regular.ttf
+        - asset: fonts/Chakra_Petch/ChakraPetch-Bold.ttf
+        - asset: fonts/Chakra_Petch/ChakraPetch-Medium.ttf
+
+    - family: Dancing Script
+      fonts:
+        - asset: fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf
+
+    - family: Josefin Sans
+      fonts:
+        - asset: fonts/Josefin_Sans/JosefinSans-Italic-VariableFont_wght.ttf
+        - asset: fonts/Josefin_Sans/JosefinSans-VariableFont_wght.ttf
+
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato/Lato-Black.ttf
+        - asset: fonts/Lato/Lato-Thin.ttf
+
+    - family: Kablammo
+      fonts:
+        - asset: fonts/Kablammo/Kablammo-Regular-VariableFont_MORF.ttf
+
+    - family: Lobster
+      fonts:
+        - asset: fonts/Lobster/Lobster-Regular.ttf
+
+    - family: Source Sans Pro
+      fonts:
+        - asset: fonts/Source Sans Pro/SourceSansPro-Black.ttf
+        - asset: fonts/Source Sans Pro/SourceSansPro-Italic.ttf
+        - asset: fonts/Source Sans Pro/SourceSansPro-Regular.ttf
+
+    - family: Source Code Pro
+      fonts:
+        - asset: fonts/Source_Code_Pro/SourceCodePro-VariableFont_wght.ttf
+
+    - family: Tilt Prism
+      fonts:
+        - asset: fonts/Tilt_Prism/TiltPrism-Regular-VariableFont_XROT,YROT.ttf
+
+    - family: Titllium Web
+      fonts:
+        - asset: fonts/Titillium_Web/TitilliumWeb-Black.ttf
+        - asset: fonts/Titillium_Web/TitilliumWeb-Bold.ttf
+        - asset: fonts/Titillium_Web/TitilliumWeb-Regular.ttf
+        

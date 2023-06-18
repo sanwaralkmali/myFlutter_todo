@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_todos/screens/components/editAlertDialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/todo_item.dart';
 import '../../styles/textStyle.dart';
 import 'space.dart';
@@ -17,11 +18,20 @@ class TodoItem extends StatefulWidget {
 }
 
 class _TodoItemState extends State<TodoItem> {
+  late bool isDarkMode = false;
+  late Color textColor = Colors.black;
+
+  @override
+  void initState() {
+    _loadSettings();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.all(10.0),
-      color: widget.item.getPriorityColor(),
+      color: widget.item.getPriorityColor(isDarkMode),
       child: IntrinsicHeight(
         child: Column(
           children: [
@@ -35,6 +45,9 @@ class _TodoItemState extends State<TodoItem> {
                       spaceH(3),
                       Text(
                         widget.item.category.name,
+                        style: TextStyle(
+                          color: textColor,
+                        ),
                       ),
                     ],
                   ),
@@ -46,14 +59,18 @@ class _TodoItemState extends State<TodoItem> {
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Text(
                           widget.item.title,
-                          style: itemTitleText,
+                          style: itemTitleText.copyWith(
+                            color: textColor,
+                          ),
                         ),
                       ),
                       Row(
                         children: [
                           Text(
                             widget.item.startDate.toString().substring(0, 10),
-                            style: dateTextStyle,
+                            style: dateTextStyle.copyWith(
+                              color: textColor,
+                            ),
                           ),
                           Text(
                             widget.item.startDate.toString().substring(10, 20),
@@ -83,12 +100,14 @@ class _TodoItemState extends State<TodoItem> {
               ),
             ),
             Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10.0),
-                  bottomRight: Radius.circular(10.0),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(4.0),
+                  bottomRight: Radius.circular(4.0),
                 ),
-                color: Color.fromARGB(255, 218, 218, 218),
+                color: isDarkMode
+                    ? const Color.fromARGB(255, 188, 188, 188)
+                    : Colors.grey[300],
               ),
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -100,8 +119,12 @@ class _TodoItemState extends State<TodoItem> {
                   ),
                   spaceH(10),
                   Text(
-                    'Due to :  ${widget.item.scheduledDate.toString().substring(0, 10) == DateTime.now().toString().substring(0, 10) ? 'Today' : widget.item.scheduledDate.toString().substring(0, 17)}',
-                    style: dateTextStyle,
+                    widget.item.isDone
+                        ? 'Taken time : ${widget.item.getTimeTaken()}'
+                        : 'Due to :  ${widget.item.scheduledDate.toString().substring(0, 10) == DateTime.now().toString().substring(0, 10) ? 'Today' : widget.item.scheduledDate.toString().substring(0, 17)}',
+                    style: dateTextStyle.copyWith(
+                      color: const Color.fromARGB(207, 31, 29, 29),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,10 +161,23 @@ class _TodoItemState extends State<TodoItem> {
                             }
                           }
                         },
-                        child: const Text('Reschedule'),
+                        child: Text(
+                          'Reschedule',
+                          style: TextStyle(
+                            color: isDarkMode
+                                ? const Color.fromARGB(247, 36, 90, 68)
+                                : const Color.fromARGB(255, 36, 87, 129),
+                          ),
+                        ),
                       ),
                       Checkbox(
                         value: widget.item.isDone,
+                        checkColor: isDarkMode ? Colors.white : Colors.black,
+                        fillColor: MaterialStateProperty.all<Color>(
+                          isDarkMode
+                              ? const Color.fromARGB(255, 36, 87, 129)
+                              : const Color.fromARGB(239, 74, 144, 202),
+                        ),
                         onChanged: (bool? value) {
                           setState(() {
                             widget.item.isDone = value!;
@@ -164,5 +200,14 @@ class _TodoItemState extends State<TodoItem> {
         ),
       ),
     );
+  }
+
+  Future<void> _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isDarkMode = prefs.getBool('isDarkMode') ?? false;
+      textColor =
+          isDarkMode ? const Color.fromARGB(255, 20, 19, 19) : Colors.black;
+    });
   }
 }

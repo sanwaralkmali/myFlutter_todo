@@ -1,4 +1,7 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../exportScreens.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -15,17 +18,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _index = 0;
+  late Color iconColor = const Color.fromARGB(255, 0, 0, 0);
+  late Color labelColor = const Color.fromARGB(255, 42, 125, 60);
+  late bool isDarkMode = false;
+
   final List<Widget> _screens = const <Widget>[
     HomeScreen(),
     HistoryScreen(),
     UpcomingScreen(),
     SettingsScreen(),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void navigate(int index) {
     setState(() {
@@ -45,12 +47,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   BottomNavigationBar myBottomNavigationBar() {
+    _loadSettings();
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(
             Icons.home,
             size: 30,
+            color: isDarkMode
+                ? const Color.fromARGB(255, 222, 217, 217)
+                : const Color.fromARGB(255, 36, 35, 35),
           ),
           label: 'Home',
         ),
@@ -58,6 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(
             Icons.calendar_month,
             size: 30,
+            color: isDarkMode
+                ? const Color.fromARGB(255, 222, 217, 217)
+                : const Color.fromARGB(255, 36, 35, 35),
           ),
           label: 'History',
         ),
@@ -65,6 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(
             Icons.upcoming,
             size: 30,
+            color: isDarkMode
+                ? const Color.fromARGB(255, 222, 217, 217)
+                : const Color.fromARGB(255, 36, 35, 35),
           ),
           label: 'Upcoming',
         ),
@@ -72,14 +84,25 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(
             Icons.settings,
             size: 30,
+            color: isDarkMode
+                ? const Color.fromARGB(255, 222, 217, 217)
+                : const Color.fromARGB(255, 36, 35, 35),
           ),
           label: 'Settings',
         ),
       ],
-      unselectedItemColor: Colors.black,
-      selectedItemColor: const Color.fromARGB(196, 16, 85, 14),
+      selectedItemColor: isDarkMode
+          ? const Color.fromARGB(228, 124, 218, 110)
+          : const Color.fromARGB(241, 24, 133, 16),
       currentIndex: _index,
       onTap: (value) => navigate(value),
     );
+  }
+
+  Future<void> _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    });
   }
 }
