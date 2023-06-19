@@ -13,7 +13,7 @@ ToDoHub is a powerful and intuitive to-do application designed to help you stay 
 - Customize the app to suit your preferences
 
 ## Screenshots
-![Screenshot 1][./screenshots/1.png]
+![Screenshot 1][https://github.com/sanwaralkmali/myFlutter_todo/blob/main/screenshots/1.png]
 
 ![Screenshot 2][./screenshots/2.png]
 
