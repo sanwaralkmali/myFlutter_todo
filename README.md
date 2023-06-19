@@ -15,10 +15,12 @@ ToDoHub is a powerful and intuitive to-do application designed to help you stay 
 ## Screenshots
 ![Screenshot 1] [https://github.com/sanwaralkmali/myFlutter_todo/blob/main/screenshots/1.png]
 
-![Screenshot 2][./screenshots/2.png]
+![Screenshot 2] [https://github.com/sanwaralkmali/myFlutter_todo/blob/main/screenshots/2.png]
 
-![Screenshot 3][screenshots/3.png]
-![Screenshot 4][screenshots/4.png]
+![Screenshot 3] [https://github.com/sanwaralkmali/myFlutter_todo/blob/main/screenshots/3.png]
+
+![Screenshot 4] [https://github.com/sanwaralkmali/myFlutter_todo/blob/main/screenshots/4.png]
+
 
 ## Installation
 1. Clone the repository or download the source code.
