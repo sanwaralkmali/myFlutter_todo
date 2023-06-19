@@ -14,15 +14,10 @@ ToDoHub is a powerful and intuitive to-do application designed to help you stay 
 
 ## Screenshots
 ![Screenshot 1][./screenshots/1.png]
-<<<<<<< HEAD
 
 ![Screenshot 2][./screenshots/2.png]
 
-=======
-![Screenshot 2][screenshots/2.png]
->>>>>>> 63fc35c917f12aa7281d56476aa07067a6fb470b
 ![Screenshot 3][screenshots/3.png]
-
 ![Screenshot 4][screenshots/4.png]
 
 ## Installation
