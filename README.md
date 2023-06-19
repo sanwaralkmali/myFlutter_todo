@@ -13,9 +13,12 @@ ToDoHub is a powerful and intuitive to-do application designed to help you stay 
 - Customize the app to suit your preferences
 
 ## Screenshots
-![Screenshot 1][screenshots/1.png]
-![Screenshot 2][screenshots/2.png]
+![Screenshot 1][./screenshots/1.png]
+
+![Screenshot 2][./screenshots/2.png]
+
 ![Screenshot 3][screenshots/3.png]
+
 ![Screenshot 4][screenshots/4.png]
 
 ## Installation
@@ -26,14 +29,16 @@ ToDoHub is a powerful and intuitive to-do application designed to help you stay 
 5. Run the app using `flutter run`.
 
 ## Dependencies
-- [List any third-party libraries or frameworks your app relies on.]
+- Flutter SDK
+- cupertino_icons: ^1.0.2
+- sqflite: ^2.2.8+4
+- fluttertoast: ^8.2.2
+- table_calendar: ^3.0.9
+- intl: ^0.18.1
+- shared_preferences: ^2.1.2
 
 ## Contributing
 We welcome contributions from the open-source community. If you have any suggestions, bug reports, or feature requests, please submit them as issues or pull requests.
 
-## License
-[Specify the license under which your app is distributed.]
-
 ## Contact
-[Provide contact information for users to reach out to you with questions or feedback.]
-
+For any inquiries or feedback, feel free to reach out to us at [me@salah_alkmali.com].
