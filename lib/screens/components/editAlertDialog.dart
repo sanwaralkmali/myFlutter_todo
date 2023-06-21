@@ -83,6 +83,16 @@ class _EditAlertDialogState extends State<EditAlertDialog> {
         case 'shopping':
           taskTypeValue = TaskCategory.shopping;
           break;
+        case 'home':
+          taskTypeValue = TaskCategory.home;
+          break;
+        case 'education':
+          taskTypeValue = TaskCategory.education;
+          break;
+        case 'health':
+          taskTypeValue = TaskCategory.health;
+          break;
+
         default:
           taskTypeValue = TaskCategory.others;
       }

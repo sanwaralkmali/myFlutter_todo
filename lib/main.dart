@@ -27,9 +27,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final DatabaseHelper databaseHelper = DatabaseHelper();
-
   bool isDarkMode = false;
-
   String fontFamily = 'Roboto';
 
   @override
